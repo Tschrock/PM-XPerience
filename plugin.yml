@@ -1,0 +1,33 @@
+#name, main, version and api are required
+name: XPerience
+main: tschrock\xperience\XPerience
+version: 0.0.1
+api: [1.0.0]
+
+load: POSTWORLD
+author: tschrock (tschrock123@gmail.com)
+description: XP in PE!!
+website: http://www.tschrock.net
+commands:
+ xp:
+  description: View your xp.
+  usage: "Usage: /xp"
+  permission: xperience.command.xp
+ upgrade:
+  description: Upgrade the item your holding using your xp.
+  usage: "Usage: /upgrade or /upgrade view"
+  permission: xperience.command.upgrade
+ repair:
+  description: Repair the item your holding using your xp.
+  usage: "Usage: /repair or /repair view"
+  permission: xperience.command.repair
+permissions:
+ xperience.command.xp:
+  description: "Allows the user to run the xp command"
+  default: true
+ xperience.command.upgrade:
+  description: "Allows the user to use xp to upgrade their tools"
+  default: true
+ xperience.command.repair:
+  description: "Allows the user to use xp to repair their tools"
+  default: true
