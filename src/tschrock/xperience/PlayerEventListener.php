@@ -1,6 +1,6 @@
 <?php
 
-/** 
+/**
  * XPerience - an XP framework for your pocketmine server.
  * 
  * @author Tschrock <tschrock@gmail.com>
@@ -14,6 +14,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\Player;
+use pocketmine\event\entity\EntityDeathEvent;
 
 /**
  * The event listener. Has the basic ways for getting xp (Other plugins can make their own ways).
@@ -61,20 +62,37 @@ class PlayerEventListener implements Listener {
     }
 
     /**
-     * A placeholder for when a mob is killed. Can't do anything untill we actualy have mobs.
+     * When an entity is killed.
      * 
-     * @param type $event
+     * @param EntityDeathEvent $event
+     *
+     * @priority MONITOR
+     * @ignoreCancelled false
      */
-    public function onMobKilled($event){
-        
+    public function onEntityKilled(EntityDeathEvent $event) {
+        $entity = $event->getEntity();
+        $lastAttack = $entity->getLastDamageCause();
+        if ($lastAttack instanceof EntityDamageByEntityEvent) {
+            $attacker = $lastAttack->getDamager();
+            $victim = $lastAttack->getEntity();
+            if ($attacker instanceof Player) {
+                $player = $damager;
+                $xp = XPerienceAPI::getXpFor(XPerienceAPI::ACTION_KILL, $victim);
+                if ($xp != false) {
+                    $xptotal = XPerienceAPI::addXP($player, $xp);
+                    $player->sendMessage("[XP] You got " . $xp . "xp! (" . $xptotal . " total)");
+                }
+            }
+        }
     }
-        
+
     /**
-     * A placeholder for when a player breed an animal. Can't do anything untill we actualy have mobs.
+     * A placeholder for when a player breeds an animal. Can't do anything untill we actualy have mobs.
      * 
      * @param type $event
      */
-    public function onAnimalBreed($event){
+    public function onAnimalBreed($event) {
         
     }
+
 }
