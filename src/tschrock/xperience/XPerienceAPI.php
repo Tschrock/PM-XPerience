@@ -187,7 +187,7 @@ class XPerienceAPI {
      * @return \pocketmine\nbt\tag\Float The amount of xp $player now has.
      */
     public static function setXP(Player $player, $amount) {
-        return $player->namedtag["XPerience"] = $amount;
+        return $player->namedtag["XPerience"] = new \pocketmine\nbt\tag\Float("XPerience", $amount);
     }
 
     /**

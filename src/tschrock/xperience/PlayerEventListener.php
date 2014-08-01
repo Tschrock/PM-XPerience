@@ -15,6 +15,7 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDeathEvent;
+use pocketmine\event\player\PlayerDeathEvent;
 
 /**
  * The event listener. Has the basic ways for getting xp (Other plugins can make their own ways).
@@ -76,7 +77,7 @@ class PlayerEventListener implements Listener {
             $attacker = $lastAttack->getDamager();
             $victim = $lastAttack->getEntity();
             if ($attacker instanceof Player) {
-                $player = $damager;
+                $player = $attacker;
                 $xp = XPerienceAPI::getXpFor(XPerienceAPI::ACTION_KILL, $victim);
                 if ($xp != false) {
                     $xptotal = XPerienceAPI::addXP($player, $xp);
@@ -86,6 +87,31 @@ class PlayerEventListener implements Listener {
         }
     }
 
+        /**
+     * When a player is killed.
+     * 
+     * @param PlayerDeathEvent $event
+     *
+     * @priority MONITOR
+     * @ignoreCancelled false
+     */
+    public function onPlayerKilled(PlayerDeathEvent $event) {
+        $entity = $event->getEntity();
+        $lastAttack = $entity->getLastDamageCause();
+        if ($lastAttack instanceof EntityDamageByEntityEvent) {
+            $attacker = $lastAttack->getDamager();
+            $victim = $lastAttack->getEntity();
+            if ($attacker instanceof Player) {
+                $player = $attacker;
+                $xp = XPerienceAPI::getXpFor(XPerienceAPI::ACTION_KILL, $victim);
+                if ($xp != false) {
+                    $xptotal = XPerienceAPI::addXP($player, $xp);
+                    $player->sendMessage("[XP] You got " . $xp . "xp! (" . $xptotal . " total)");
+                }
+            }
+        }
+    }
+    
     /**
      * A placeholder for when a player breeds an animal. Can't do anything untill we actualy have mobs.
      * 
